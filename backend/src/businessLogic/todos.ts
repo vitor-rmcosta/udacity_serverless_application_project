@@ -9,8 +9,8 @@ const todoAccess = new TodoAccess()
 export async function getTodos(userId : string){
    return await todoAccess.getTodos(userId);
 }
-export async function deleteTodos(userId : string, todoId : string){
-   return await todoAccess.deleteTodo(userId, todoId);
+export async function deleteTodos(todoId : string){
+   return await todoAccess.deleteTodo(todoId);
 }
 export async function updateTodo(updatedTodo : UpdateTodoRequest, todoId : string, userId : string){
 

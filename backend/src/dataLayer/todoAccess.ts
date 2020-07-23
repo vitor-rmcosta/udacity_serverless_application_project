@@ -10,7 +10,8 @@ export class TodoAccess {
 
    constructor(
       private readonly docClient: DocumentClient = new XAWS.DynamoDB.DocumentClient(),
-      private readonly todosTable = process.env.TODOS_TABLE) {}
+      private readonly todosTable = process.env.TODOS_TABLE,
+      private readonly userIdIndex = process.env.USER_ID_INDEX) {}
    
    async createTodo(newItem : TodoItem): Promise<TodoItem> {
       await this.docClient
@@ -42,9 +43,10 @@ export class TodoAccess {
    }
 
    async getTodos(userId : string){
-      const result = await this.docClient.scan({
+      const result = await this.docClient.query({
          TableName: this.todosTable,
-         FilterExpression: 'userId = :userId',
+         IndexName: this.userIdIndex,
+         KeyConditionExpression: 'userId = :userId',
          ExpressionAttributeValues: {
             ':userId': userId,
          },
@@ -53,9 +55,7 @@ export class TodoAccess {
       return result.Items
    }
 
-   async deleteTodo(userId: string, todoId: string) {
-      console.log("THE USER ID "+userId);
-      console.log("THE TODO ID "+todoId);
+   async deleteTodo(todoId: string) {
       await this.docClient
          .delete({
             Key: {

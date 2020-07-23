@@ -10,6 +10,21 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
 
    const userId = getUserId(event);
    const newTodo: CreateTodoRequest = JSON.parse(event.body);
+   
+   if(!newTodo.name || !newTodo.dueDate){
+      return {
+         statusCode: 400,
+         headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Credentials': true
+         },
+         body: JSON.stringify(
+            {
+               item: newTodo
+            }
+            )
+         }
+   }
    const newItem = await createTodo(newTodo, userId);
 
    return {

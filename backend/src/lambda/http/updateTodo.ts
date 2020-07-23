@@ -11,6 +11,21 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
    const userId = getUserId(event);
 
    console.log("PASSOU DO GET USER ID");
+
+   if(!updatedTodo.name || !updatedTodo.dueDate || updatedTodo.done === undefined){
+      return {
+         statusCode: 400,
+         headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Credentials': true
+         },
+         body: JSON.stringify(
+            {
+               item: updatedTodo
+            }
+            )
+         }
+   }
    
    // DONE-TODO: Update a TODO item with the provided id using values in the "updatedTodo" object 
    const item = await updateTodo(updatedTodo, todoId, userId);
